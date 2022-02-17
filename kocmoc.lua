@@ -620,15 +620,18 @@ function getflame()
         local isFlameDark = v:WaitForChild("PF").Color == darkFlameColor
         if not isFlameDark then
             local mag = tonumber((v.Position-game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude)
-            if mag < 9 or mag > 150 then continue end
-            if mag < 20 then
+            if mag < 3 or mag > 250 then continue end
+            if mag < 25 then
                 local lc = game.Players.LocalPlayer.Character:GetPrimaryPartCFrame()
                 local lp = lc.Position
                 game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(lp * Vector3.new(1, 0, 1), v.Position * Vector3.new(1, 0, 1) - lc.LookVector * 0.1) + lp * Vector3.new(0, 1, 0))
                 v:SetAttribute("_collected", true)
             elseif not v:GetAttribute("_collected") then
+                local lc = game.Players.LocalPlayer.Character:GetPrimaryPartCFrame()
+                local lp = lc.Position
+                local cf = CFrame.new(lp * Vector3.new(1, 0, 1), v.Position * Vector3.new(1, 0, 1) - lc.LookVector * 0.1) + lp * Vector3.new(0, 1, 0)
                 farm({
-                    Position = v.Position - game.Players.LocalPlayer.Character:GetPrimaryPartCFrame().lookVector * 15
+                    Position = v.Position - cf.LookVector * 15
                 })
             end
             break
