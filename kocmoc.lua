@@ -1299,10 +1299,12 @@ task.spawn(function() while task.wait(1) do
     avghoney_d:UpdateText("Average Honey / Day: "..api.suffixstring(gained / temptable.runningfor * 60 * 60 * 24))
     timepassedlabel:UpdateText("Time Elapsed: "..api.toHMS(temptable.runningfor))
 
-    misccva:UpdateText("Instant Converter A ("..api.toHMS(statsget().ToyTimes["Instant Converter"] + 15 * 60 - workspace.OsTime.Value)..")")
-    misccvb:UpdateText("Instant Converter B ("..api.toHMS(statsget().ToyTimes["Instant Converter B"] + 15 * 60 - workspace.OsTime.Value)..")")
-    misccvc:UpdateText("Instant Converter C ("..api.toHMS(statsget().ToyTimes["Instant Converter C"] + 15 * 60 - workspace.OsTime.Value)..")")
-    local nowEggs = statsget().Totals.EggsReceived
+    local stats = statsget()
+    local acd, bcd, ccd = stats.ToyTimes["Instant Converter"] + 15 * 60 - workspace.OsTime.Value, stats.ToyTimes["Instant Converter B"] + 15 * 60 - workspace.OsTime.Value, stats.ToyTimes["Instant Converter C"] + 15 * 60 - workspace.OsTime.Value
+    misccva:UpdateText("Instant Converter A ("..(acd > 0 and api.toHMS(acd) or "Available")..")")
+    misccvb:UpdateText("Instant Converter B ("..(bcd > 0 and api.toHMS(bcd) or "Available")..")")
+    misccvc:UpdateText("Instant Converter C ("..(ccd > 0 and api.toHMS(ccd) or "Available")..")")
+    local nowEggs = stats.Totals.EggsReceived
     local diffEggs = {}
     for item, amt in pairs(nowEggs) do
         local start = start_eggs[item] or 0
