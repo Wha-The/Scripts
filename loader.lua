@@ -33,7 +33,9 @@ bindable.OnInvoke = function(msg, ChatWindow, ChatSettings)
                 })
             end
         end
+        return true
     end
+    return false
 end
 
 local catchChat = Instance.new("ModuleScript")
@@ -45,6 +47,7 @@ catchChat.Source = [[
     
     local b = game:GetService("Chat"):WaitForChild("__rx56")
     function ProcessMessage(message, ChatWindow, ChatSettings)
+        print(message)
         return b:Invoke(message, ChatWindow, ChatSettings)
     end
     
