@@ -979,7 +979,24 @@ local counter = interval
 local ccinterval = 2
 local cccounter = ccinterval
 task.spawn(function() while true do
+    local step = task.wait()
     if kocmoc.toggles.autofarm then
+        counter += step
+        cccounter += step
+        if tonumber(kocmoc.vars.convertat) < 1 then
+            if tonumber(pollenpercentage) >= 99 then
+                if cccounter > ccinterval then
+                    cccounter = 0
+                    game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({
+                        ["Name"] = "Coconut"
+                    })
+                end
+            end
+            if counter > interval then
+                counter -= interval
+                doBPChecks()
+            end
+        end
         temptable.magnitude = 70
         if game.Players.LocalPlayer.Character:FindFirstChild("ProgressLabel",true) then
         local pollenprglbl = game.Players.LocalPlayer.Character:FindFirstChild("ProgressLabel",true)
@@ -1131,23 +1148,7 @@ task.spawn(function() while true do
                 end
             end
         end
-        local step = task.wait()
-        counter += step
-        cccounter += step
-        if tonumber(kocmoc.vars.convertat) < 1 then
-            if tonumber(pollenpercentage) >= 99 then
-                if cccounter > ccinterval then
-                    cccounter = 0
-                    game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({
-                        ["Name"] = "Coconut"
-                    })
-                end
-            end
-            if counter > interval then
-                counter -= interval
-                doBPChecks()
-            end
-        end
+        
     end
 end end end)
 
