@@ -602,7 +602,7 @@ end
 
 function getfuzzy()
     pcall(function()
-        for i,v in next, game.workspace.Particles:GetChildren() do
+        for i,v in next, workspace.Particles:GetChildren() do
             if v.Name == "DustBunnyInstance" and temptable.running == false and tonumber((v.Plane.Position-game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude) < temptable.magnitude/1.4 then
                 if v:FindFirstChild("Plane") then
                     farm(v:FindFirstChild("Plane"))
@@ -613,6 +613,7 @@ function getfuzzy()
     end)
 end
 
+local StarterPack = game:GetService("StarterPack")
 local darkFlameColor = game:GetService("ReplicatedStorage"):WaitForChild("LocalFX"):WaitForChild("LocalFlames"):WaitForChild("DarkFlame"):WaitForChild("PF").Color
 
 function getflame()
@@ -960,8 +961,24 @@ game.Workspace.Particles.ChildAdded:Connect(function(v)
         end
     end
 end)
+local doBPChecks = function()
+    if kocmoc.toggles.autoquest then makequests() end
+    if kocmoc.toggles.autoplanters then collectplanters() end
+    if kocmoc.toggles.autokillmobs then 
+        if temptable.act >= kocmoc.vars.monstertimer then
+            temptable.started.monsters = true
+            temptable.act = 0
+            killmobs() 
+            temptable.started.monsters = false
+        end
+    end
+end
 local lastPuff
-task.spawn(function() while task.wait() do
+local interval = 10*60
+local counter = interval
+local ccinterval = 2
+local cccounter = ccinterval
+task.spawn(function() while true do
     if kocmoc.toggles.autofarm then
         temptable.magnitude = 70
         if game.Players.LocalPlayer.Character:FindFirstChild("ProgressLabel",true) then
@@ -1112,6 +1129,23 @@ task.spawn(function() while task.wait() do
                         end
                     end
                 end
+            end
+        end
+        local step = task.wait()
+        counter += step
+        cccounter += step
+        if tonumber(kocmoc.vars.convertat) < 1 then
+            if tonumber(pollenpercentage) >= 99 then
+                if cccounter > ccinterval then
+                    cccounter = 0
+                    game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({
+                        ["Name"] = "Coconut"
+                    })
+                end
+            end
+            if counter > interval then
+                counter -= interval
+                doBPChecks()
             end
         end
     end

@@ -1,4 +1,5 @@
 local commands = {}
+local game_namecall
 local loadscript = function(scripturl)
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Wha-The/Scripts/main/"..scripturl..".lua"))()
 end
@@ -9,11 +10,7 @@ commands.spy = function()
     loadscript("simplespyv2")
 end
 
-
-local bindable = Instance.new("BindableFunction")
-bindable.Name = "__rx56"
-bindable.Parent = game:GetService("Chat")
-bindable.OnInvoke = function(msg, ChatWindow, ChatSettings)
+function checkmsg(msg)
     if string.sub(msg, 0, 1) == "!" then
         local args = string.split(string.sub(msg, 2), " ")
         if #args >= 1 then
@@ -38,21 +35,25 @@ bindable.OnInvoke = function(msg, ChatWindow, ChatSettings)
     return false
 end
 
-local catchChat = Instance.new("ModuleScript")
-catchChat.Parent = game:GetService("Chat"):WaitForChild("ClientChatModules"):WaitForChild("CommandModules")
-catchChat.Name = "Process"
-catchChat.Source = [[
-    local StarterGui = game:GetService("StarterGui")
-    local util = require(script.Parent:WaitForChild("Util"))
-    
-    local b = game:GetService("Chat"):WaitForChild("__rx56")
-    function ProcessMessage(message, ChatWindow, ChatSettings)
-        print(message)
-        return b:Invoke(message, ChatWindow, ChatSettings)
+local newnamecall = newcclosure(function(remote, ...)
+    local n_tuple = {...}
+	if typeof(remote) == "Instance" and not checkcaller() then
+        local methodName = getnamecallmethod()
+        local validInstance, remoteName = pcall(function()
+			return remote.Name
+		end)
+		if
+			validInstance
+			and (methodName == "FireServer" or methodName == "fireServer" or methodName == "InvokeServer" or methodName == "invokeServer")
+            and remoteName == "SayMessageRequest"
+		then
+            local iscmd = checkmsg(n_tuple[1])
+            if iscmd then
+                n_tuple[1] = "."
+                return game_namecall(remote, unpack(n_tuple))
+            end
+        end
+        return game_namecall(remote, ...)
     end
-    
-    return {
-        [util.KEY_COMMAND_PROCESSOR_TYPE] = util.COMPLETED_MESSAGE_PROCESSOR,
-        [util.KEY_PROCESSOR_FUNCTION] = ProcessMessage
-    }
-]]
+end)
+game_namecall = hookmetamethod(game, "__namecall", newnamecall)
