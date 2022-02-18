@@ -975,9 +975,9 @@ local doBPChecks = function()
 end
 local lastPuff
 local interval = 10*60
-local counter = interval
+local counter = tick() - interval
 local ccinterval = 2
-local cccounter = ccinterval
+local cccounter = tick() - ccinterval
 task.spawn(function() while true do
     local step = task.wait()
     if kocmoc.toggles.autofarm then
@@ -988,19 +988,17 @@ task.spawn(function() while true do
         local pollencount = game.Players.LocalPlayer.CoreStats.Pollen.Value
         pollenpercentage = pollencount/maxpollen*100
 
-        counter += step
-        cccounter += step
         if tonumber(kocmoc.vars.convertat) < 1 then
             if tonumber(pollenpercentage) >= 99 then
-                if cccounter > ccinterval then
-                    cccounter = 0
+                if tick() > (cccounter + ccinterval) then
+                    cccounter = tick()
                     game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({
                         ["Name"] = "Coconut"
                     })
                 end
             end
-            if counter > interval then
-                counter -= interval
+            if tick() > (counter + interval) then
+                counter = tick()
                 doBPChecks()
             end
         end
