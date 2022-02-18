@@ -981,6 +981,13 @@ local cccounter = ccinterval
 task.spawn(function() while true do
     local step = task.wait()
     if kocmoc.toggles.autofarm then
+        temptable.magnitude = 70
+        if game.Players.LocalPlayer.Character:FindFirstChild("ProgressLabel",true) then
+        local pollenprglbl = game.Players.LocalPlayer.Character:FindFirstChild("ProgressLabel",true)
+        maxpollen = tonumber(pollenprglbl.Text:match("%d+$"))
+        local pollencount = game.Players.LocalPlayer.CoreStats.Pollen.Value
+        pollenpercentage = pollencount/maxpollen*100
+
         counter += step
         cccounter += step
         if tonumber(kocmoc.vars.convertat) < 1 then
@@ -997,12 +1004,9 @@ task.spawn(function() while true do
                 doBPChecks()
             end
         end
-        temptable.magnitude = 70
-        if game.Players.LocalPlayer.Character:FindFirstChild("ProgressLabel",true) then
-        local pollenprglbl = game.Players.LocalPlayer.Character:FindFirstChild("ProgressLabel",true)
-        maxpollen = tonumber(pollenprglbl.Text:match("%d+$"))
-        local pollencount = game.Players.LocalPlayer.CoreStats.Pollen.Value
-        pollenpercentage = pollencount/maxpollen*100
+
+
+
         fieldselected = game:GetService("Workspace").FlowerZones[kocmoc.vars.field]
         if kocmoc.toggles.autodoquest and game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Menus.Children.Quests.Content:FindFirstChild("Frame") then
             for i,v in next, game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Menus.Children.Quests:GetDescendants() do
