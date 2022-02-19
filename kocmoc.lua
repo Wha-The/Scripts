@@ -974,7 +974,7 @@ local doBPChecks = function()
     end
 end
 local lastPuff
-local interval = 10*60
+local interval = 6*60
 local counter = tick() - interval
 local ccinterval = 2
 local cccounter = tick() - ccinterval
@@ -1038,6 +1038,9 @@ task.spawn(function() while true do
         fieldpos = CFrame.new(fieldselected.Position.X, fieldselected.Position.Y+3, fieldselected.Position.Z)
         fieldposition = fieldselected.Position
         if temptable.sprouts.detected and temptable.sprouts.coords and kocmoc.toggles.farmsprouts then
+            if tonumber(pollenpercentage) >= 99 then
+                game.Players.LocalPlayer.Character.Humanoid.Health = 0
+            end
             fieldposition = temptable.sprouts.coords.Position
             fieldpos = temptable.sprouts.coords
         end
