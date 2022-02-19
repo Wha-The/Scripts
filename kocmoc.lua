@@ -1038,7 +1038,9 @@ task.spawn(function() while true do
         fieldpos = CFrame.new(fieldselected.Position.X, fieldselected.Position.Y+3, fieldselected.Position.Z)
         fieldposition = fieldselected.Position
         if temptable.sprouts.detected and temptable.sprouts.coords and kocmoc.toggles.farmsprouts then
-            game.Players.LocalPlayer.Character.Humanoid.Health = 0
+            if tonumber(pollenpercentage) >= 99 then
+                game.Players.LocalPlayer.Character.Humanoid.Health = 0
+            end
             fieldposition = temptable.sprouts.coords.Position
             fieldpos = temptable.sprouts.coords
         end
