@@ -63,7 +63,7 @@ local temptable = {
     windy = nil,
     sprouts = {
         detected = false,
-        coords
+        coords = nil,
     },
     cache = {
         autofarm = false,
@@ -964,7 +964,7 @@ end)
 local doBPChecks = function()
     if kocmoc.toggles.autoquest then makequests() end
     if kocmoc.toggles.autoplanters then collectplanters() end
-    if kocmoc.toggles.autokillmobs then 
+    if tonumber(kocmoc.vars.convertat) < 1 or kocmoc.toggles.autokillmobs then 
         if temptable.act >= kocmoc.vars.monstertimer then
             temptable.started.monsters = true
             temptable.act = 0
