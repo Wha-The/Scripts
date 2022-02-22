@@ -774,6 +774,7 @@ gainedSection:CreateButton("Reset Timer/Gained Honey", function()
 end)
 local timepassedlabel = gainedSection:CreateLabel("Time Elapsed: 0:0:0")
 local gainedhoneylabel = gainedSection:CreateLabel("Gained Honey: 0")
+local balloonSize = gainedSection:CreateLabel("Balloon")
 local avghoney_s = gainedSection:CreateLabel("Average Honey / Second: 0")
 local avghoney_m = gainedSection:CreateLabel("Average Honey / Minute: 0")
 local avghoney_h = gainedSection:CreateLabel("Average Honey / Hour: 0")
@@ -989,11 +990,12 @@ task.spawn(function() while true do
         pollenpercentage = pollencount/maxpollen*100
         local s, b = pcall(function()return game:GetService("Workspace").Balloons.HiveBalloons.HiveBalloonInstance.BalloonBody.GuiAttach.Gui.Bar.TextLabel.Text end)
         if s then
-            b = tonumber(string.gsub(b, ",", ""))
-            if typeof(b) == "number" and b > 15000000000 then
+            s, b = pcall(function() local a = string.gsub(b, ",", ""); return tonumber(a) end)
+            if s and typeof(b) == "number" and b > 15000000000 then
                 pollenpercentage = 100
             end
         end
+        
         if tonumber(kocmoc.vars.convertat) < 1 then
             if tonumber(pollenpercentage) >= 99 then
                 if tick() > (cccounter + ccinterval) then
@@ -1346,6 +1348,12 @@ task.spawn(function() while task.wait(1) do
     avghoney_m:UpdateText("Average Honey / Minute: "..api.suffixstring(gained / temptable.runningfor * 60))
     avghoney_h:UpdateText("Average Honey / Hour: "..api.suffixstring(gained / temptable.runningfor * 60 * 60))
     avghoney_d:UpdateText("Average Honey / Day: "..api.suffixstring(gained / temptable.runningfor * 60 * 60 * 24))
+    local x = 0
+    local s, b = pcall(function()return game:GetService("Workspace").Balloons.HiveBalloons.HiveBalloonInstance.BalloonBody.GuiAttach.Gui.Bar.TextLabel.Text end)
+    if s then
+        s, x = pcall(function() local a = string.gsub(b, ",", ""); return tonumber(a) end)
+    end
+    balloonSize:UpdateText("Balloon: "..api.suffixstring(x))
     timepassedlabel:UpdateText("Time Elapsed: "..api.toHMS(temptable.runningfor))
 
     local stats = statsget()
