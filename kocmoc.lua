@@ -1,6 +1,5 @@
 _G.autoload = "afk"
 
-
 -- API CALLS
 
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Wha-The/Scripts/main/bracketv4.lua"))()
