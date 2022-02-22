@@ -990,7 +990,7 @@ task.spawn(function() while true do
         local s, b = pcall(function()return game:GetService("Workspace").Balloons.HiveBalloons.HiveBalloonInstance.BalloonBody.GuiAttach.Gui.Bar.TextLabel.Text end)
         if s then
             b = tonumber(string.gsub(b, ","))
-            if typeof(b) == "number" and b > 15_000_000_000 then
+            if typeof(b) == "number" and b > 15000000000 then
                 pollenpercentage = 100
             end
         end
