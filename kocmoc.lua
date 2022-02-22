@@ -986,8 +986,15 @@ task.spawn(function() while true do
         local pollenprglbl = game.Players.LocalPlayer.Character:FindFirstChild("ProgressLabel",true)
         maxpollen = tonumber(pollenprglbl.Text:match("%d+$"))
         local pollencount = game.Players.LocalPlayer.CoreStats.Pollen.Value
+        
         pollenpercentage = pollencount/maxpollen*100
-
+        local s, b = pcall(function()return game:GetService("Workspace").Balloons.HiveBalloons.HiveBalloonInstance.BalloonBody.GuiAttach.Gui.Bar.TextLabel.Text end)
+        if s then
+            b = tonumber(string.gsub(b, ","))
+            if typeof(b) == "number" and b > 15_000_000_000 then
+                pollenpercentage = 100
+            end
+        end
         if tonumber(kocmoc.vars.convertat) < 1 then
             if tonumber(pollenpercentage) >= 99 then
                 if tick() > (cccounter + ccinterval) then
@@ -1100,7 +1107,6 @@ task.spawn(function() while true do
                     task.wait(.5)
                     if kocmoc.toggles.autosprinkler then makesprinklers() end
                 end
-                getflame()
                 getprioritytokens()
                 if kocmoc.toggles.avoidmobs then avoidmob() end
                 if kocmoc.toggles.farmclosestleaf then closestleaf() end
@@ -1119,7 +1125,7 @@ task.spawn(function() while true do
             repeat
                 converthoney()
             until game.Players.LocalPlayer.CoreStats.Pollen.Value == 0
-            if kocmoc.toggles.convertballoons and gethiveballoon() and balloonBlessingTimerLow() then
+            if kocmoc.toggles.convertballoons and gethiveballoon() then
                 task.wait(6)
                 repeat
                     task.wait()
