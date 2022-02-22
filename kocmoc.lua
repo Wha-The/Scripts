@@ -1047,6 +1047,7 @@ task.spawn(function() while true do
         if temptable.sprouts.detected and temptable.sprouts.coords and kocmoc.toggles.farmsprouts then
             if tonumber(pollenpercentage) >= 99 then
                 game.Players.LocalPlayer.Character.Humanoid.Health = 0
+                continue
             end
             fieldposition = temptable.sprouts.coords.Position
             fieldpos = temptable.sprouts.coords
