@@ -251,6 +251,7 @@ local kocmoc = {
     vars = {
         field = "Ant Field",
         convertat = 100,
+        convertatballoon = 15000000000,
         farmspeed = 60,
         prefer = "Tokens",
         walkspeed = 70,
@@ -791,7 +792,7 @@ local misccvc = misccv:CreateButton("Instant Converter C", function() game:GetSe
 local farmo = farmtab:CreateSection("Farming")
 local fielddropdown = farmo:CreateDropdown("Field", fieldstable, function(String) kocmoc.vars.field = String end) fielddropdown:SetOption(fieldstable[1])
 convertatslider = farmo:CreateSlider("Convert At", 0, 100, 100, false, function(Value) kocmoc.vars.convertat = Value end)
-convertatslider_balloon = farmo:CreateSlider("Convert Balloon At", 10000000000, 250000000000, 100, false, function(Value) kocmoc.vars.convertatballoon = Value end)
+convertatslider_balloon = farmo:CreateSlider("Convert Balloon At", 10000000000, 250000000000, 15000000000, false, function(Value) kocmoc.vars.convertatballoon = Value end)
 local autofarmtoggle = farmo:CreateToggle("Autofarm ⚙", nil, function(State) kocmoc.toggles.autofarm = State end) autofarmtoggle:CreateKeybind("U", function(Key) end)
 farmo:CreateToggle("Autodig", nil, function(State) kocmoc.toggles.autodig = State end)
 farmo:CreateToggle("Auto Sprinkler", nil, function(State) kocmoc.toggles.autosprinkler = State end)
