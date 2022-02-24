@@ -403,7 +403,8 @@ function Library:CreateWindow(Config, Parent)
 						Toggle.Title.Size = UDim2.new(1,-Toggle.Keybind.Size.X.Offset - 15,1,0)
 					end)
 
-					UserInputService.InputBegan:Connect(function(Input)
+					UserInputService.InputBegan:Connect(function(Input, gp)
+						if gp then return end
 						if WaitingForBind and Input.UserInputType == Enum.UserInputType.Keyboard then
 							local Key = tostring(Input.KeyCode):gsub("Enum.KeyCode.", "")
 							if not table.find(Blacklist, Key) then

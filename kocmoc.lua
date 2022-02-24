@@ -516,7 +516,7 @@ function gethiveballoon()
                     task.wait()
                     if balloon:FindFirstChild("BalloonRoot") then
                         if (balloon.BalloonRoot.Position-hive.SpawnPos.Value.Position).magnitude < 15 then
-                            result = true
+                            result = balloon
                             break
                         end
                     end
@@ -990,7 +990,7 @@ task.spawn(function() while true do
         local pollencount = game.Players.LocalPlayer.CoreStats.Pollen.Value
         
         pollenpercentage = pollencount/maxpollen*100
-        local s, b = pcall(function()return game:GetService("Workspace").Balloons.HiveBalloons.HiveBalloonInstance.BalloonBody.GuiAttach.Gui.Bar.TextLabel.Text end)
+        local s, b = pcall(function()return gethiveballoon().BalloonBody.GuiAttach.Gui.Bar.TextLabel.Text end)
         if s then
             s, b = pcall(function() local a = string.gsub(b, ",", ""); return tonumber(a) end)
             if s and typeof(b) == "number" and b > kocmoc.vars.convertatballoon then
@@ -1351,7 +1351,7 @@ task.spawn(function() while task.wait(1) do
     avghoney_h:UpdateText("Average Honey / Hour: "..api.suffixstring(gained / temptable.runningfor * 60 * 60))
     avghoney_d:UpdateText("Average Honey / Day: "..api.suffixstring(gained / temptable.runningfor * 60 * 60 * 24))
     local x = 0
-    local s, b = pcall(function()return game:GetService("Workspace").Balloons.HiveBalloons.HiveBalloonInstance.BalloonBody.GuiAttach.Gui.Bar.TextLabel.Text end)
+    local s, b = pcall(function()return gethiveballoon().BalloonBody.GuiAttach.Gui.Bar.TextLabel.Text end)
     if s then
         s, x = pcall(function() local a = string.gsub(b, ",", ""); return tonumber(a) end)
     end
