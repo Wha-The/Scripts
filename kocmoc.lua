@@ -551,8 +551,8 @@ end
 function getbubble()
     for i,v in next, game.workspace.Particles:GetChildren() do
         if string.find(v.Name, "Bubble") and temptable.running == false and tonumber((v.Position-game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude) < temptable.magnitude/1.4 then
-            game.Players.LocalPlayer.Character:MoveTo(v.Position)
-            repeat task.wait() until (game.Players.LocalPlayer.Character.PrimaryPart.Position * Vector3.new(1,0,1)- v.Position * Vector3.new(1,0,1)).Magnitude < 11
+            api.humanoid():MoveTo(v.Position) 
+            repeat task.wait() until (game.Players.LocalPlayer.Character.PrimaryPart.Position * Vector3.new(1,0,1)- v.Position * Vector3.new(1,0,1)).Magnitude < 11 or not v.Parent
         end
     end
 end
