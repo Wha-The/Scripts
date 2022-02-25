@@ -551,8 +551,8 @@ end
 function getbubble()
     for i,v in next, game.workspace.Particles:GetChildren() do
         if string.find(v.Name, "Bubble") and temptable.running == false and tonumber((v.Position-game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude) < temptable.magnitude/1.4 then
-            farm(v)
-            break
+            game.Players.LocalPlayer.Character:MoveTo(v.Position)
+            repeat task.wait() until (game.Players.LocalPlayer.Character.PrimaryPart.Position - v.Position).Magnitude < 10
         end
     end
 end
@@ -1114,10 +1114,15 @@ task.spawn(function() while true do
                 getprioritytokens()
                 if kocmoc.toggles.avoidmobs then avoidmob() end
                 if kocmoc.toggles.farmclosestleaf then closestleaf() end
-                if kocmoc.toggles.farmbubbles then getbubble() end
                 if kocmoc.toggles.farmclouds then getcloud() end
                 if kocmoc.toggles.farmunderballoons then getballoons() end
-                if not kocmoc.toggles.donotfarmtokens and done then gettoken() end
+                for i,v in next, workspace.Particles:GetChildren() do
+                    if kocmoc.toggles.farmbubbles and string.find(v.Name, "Bubble") and temptable.running == false and tonumber((v.Position-game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude) < temptable.magnitude/1.4 then
+                        game.Players.LocalPlayer.Character:MoveTo(v.Position)
+                        repeat task.wait() until (game.Players.LocalPlayer.Character.PrimaryPart.Position - v.Position).Magnitude < 10
+                    end
+                end
+                if not kocmoc.toggles.donotfarmtokens then gettoken() end
                 if not kocmoc.toggles.farmflower then getflower() end
             end
         elseif tonumber(pollenpercentage) >= tonumber(kocmoc.vars.convertat) then
