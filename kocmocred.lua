@@ -1,0 +1,1 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Wha-The/Scripts/a008a3497b7748512ed09f4fe53fd852f231d972/kocmoc.lua"))()
