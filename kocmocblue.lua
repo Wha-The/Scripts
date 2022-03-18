@@ -3,8 +3,87 @@ _G.autoload = "afk"
 -- API CALLS
 
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Wha-The/Scripts/main/bracketv4.lua"))()
-local api = loadstring(game:HttpGet("https://raw.githubusercontent.com/not-weuz/xlpapi/main/api.lua"))()
-local bssapi = loadstring(game:HttpGet("https://raw.githubusercontent.com/not-weuz/xlpapi/main/bssapi.lua"))()
+local _api = {}
+local api
+do
+    _api.nickname = game.Players.LocalPlayer.Name
+    _api.humanoidrootpart = function()
+        return game.Players.LocalPlayer.Character.PrimaryPart
+    end
+    _api.humanoid = function()
+        return game.Players.LocalPlayer.Character:WaitForChild("Humanoid")
+    end
+    _api.findvalue = function(l, s)
+        return table.find(l, s)
+    end
+    _api.partwithnamepart = function(s, folder)
+        print(s)
+        for _, child in pairs(folder:GetChildren()) do
+            if string.find(child.Name, s) then
+                return child
+            end
+        end
+    end
+    _api.tween = function(time, cframe)
+        local t = game:GetService("TweenService"):Create(_api.humanoidrootpart(), TweenInfo.new(time), {
+            CFrame = cframe
+        })
+        t:Play()
+        t.Completed:Wait()
+    end
+    _api.walkTo = function(vector3)
+        return _api.humanoid():MoveTo(vector3)
+    end
+    _api.tablefind = table.find
+    _api.teleport = function(cframe)
+        _api.humanoidrootpart().CFrame = cframe
+    end
+    _api.returnvalue = function(ss, s)
+        if string.find(ss, s) then
+            return s
+        end
+    end
+    _api.getbiggestmodel = function(g)
+        local biggest
+        local bm
+        for _, c in pairs(g:GetChildren()) do
+           if c:IsA("Model") then
+               if c:GetModelSize().Magnitude > bm then
+                   bm = c:GetModelSize().Magnitude
+                   biggest = c
+               end
+           end
+       end
+       return biggest
+    end
+    _api.suffixstring = function(x)
+        local abbreviations = {
+            "k", -- 4 digits
+            "m", -- 7 digits
+            "b", -- 10 digits
+            "t", -- 13 digits
+            "qd", -- 16 digits
+            "qt", -- 19 digits
+        }
+        local suffix = nil
+        if x < 1000 then
+            visible = x
+            suffix = ""
+        else
+            local digits = math.floor(math.log10(x)) + 1
+            local index = math.min(#abbreviations, math.floor((digits - 1) / 3))
+            visible = math.round(x / math.pow(10, index * 3 - 1)) / 10
+            suffix = abbreviations[index]
+        end
+        return tostring(visible) .. suffix
+    end
+    _api.toHMS = function(x)
+        return math.round(x).."s"
+    end
+   
+    api = _api
+end
+local bssapi = {Godmode = function()end}
 
 if not isfolder("kocmoc") then makefolder("kocmoc") end
 -- Script temporary variables
@@ -478,7 +557,7 @@ function collectplanters()
     getplanters()
     for i,v in pairs(planterst.plantername) do
         if api.partwithnamepart(v, game:GetService("Workspace").Planters) and api.partwithnamepart(v, game:GetService("Workspace").Planters):FindFirstChild("Soil") then
-            soil = api.partwithnamepart(v, game:GetService("Workspace").Planters).Soil
+            local soil = api.partwithnamepart(v, game:GetService("Workspace").Planters).Soil
             api.humanoidrootpart().CFrame = soil.CFrame
             game:GetService("ReplicatedStorage").Events.PlanterModelCollect:FireServer(planterst.planterid[i])
             task.wait(.5)
@@ -828,7 +907,14 @@ farmt:CreateToggle("Auto Honeystorm", nil, function(State) kocmoc.toggles.honeys
 
 local mobkill = combtab:CreateSection("Combat")
 mobkill:CreateToggle("Train Crab", nil, function(State) if State then api.humanoidrootpart().CFrame = CFrame.new(-307.52117919922, 107.91863250732, 467.86791992188) end end)
-mobkill:CreateToggle("Train Snail", nil, function(State) fd = game.Workspace.FlowerZones['Stump Field'] if State then api.humanoidrootpart().CFrame = CFrame.new(fd.Position.X, fd.Position.Y-6, fd.Position.Z) else api.humanoidrootpart().CFrame = CFrame.new(fd.Position.X, fd.Position.Y+2, fd.Position.Z) end end)
+mobkill:CreateToggle("Train Snail", nil, function(State)
+    local fd = game.Workspace.FlowerZones['Stump Field']
+    if State then
+        api.humanoidrootpart().CFrame = CFrame.new(fd.Position.X, fd.Position.Y-6, fd.Position.Z)
+    else
+        api.humanoidrootpart().CFrame = CFrame.new(fd.Position.X, fd.Position.Y+2, fd.Position.Z)
+    end
+end)
 mobkill:CreateToggle("Kill Mondo", nil, function(State) kocmoc.toggles.killmondo = State end)
 mobkill:CreateToggle("Kill Vicious", nil, function(State) kocmoc.toggles.killvicious = State end)
 mobkill:CreateToggle("Kill Windy", nil, function(State) kocmoc.toggles.killwindy = State end)
@@ -980,16 +1066,18 @@ local interval = 6*60
 local counter = tick() - interval
 local ccinterval = 2
 local cccounter = tick() - ccinterval
-task.spawn(function() while true do
-    local step = task.wait()
+doBPChecks()
+task.spawn(function() while task.wait() do
+    
     if kocmoc.toggles.autofarm then
         temptable.magnitude = 70
-        if game.Players.LocalPlayer.Character:FindFirstChild("ProgressLabel",true) then
+        if game.Players.LocalPlayer.Character:FindFirstChild("ProgressLabel", true) then
         local pollenprglbl = game.Players.LocalPlayer.Character:FindFirstChild("ProgressLabel",true)
-        maxpollen = tonumber(pollenprglbl.Text:match("%d+$"))
+        local maxpollen = tonumber(pollenprglbl.Text:match("%d+$"))
+        print(maxpollen)
         local pollencount = game.Players.LocalPlayer.CoreStats.Pollen.Value
         
-        pollenpercentage = pollencount/maxpollen*100
+        local pollenpercentage = pollencount/maxpollen*100
         local s, b = pcall(function()return gethiveballoon().BalloonBody.GuiAttach.Gui.Bar.TextLabel.Text end)
         if s then
             s, b = pcall(function() local a = string.gsub(b, ",", ""); return tonumber(a) end)
@@ -1049,8 +1137,9 @@ task.spawn(function() while true do
         fieldposition = fieldselected.Position
         if temptable.sprouts.detected and temptable.sprouts.coords and kocmoc.toggles.farmsprouts then
             if tonumber(pollenpercentage) >= 99 then
-                game.Players.LocalPlayer.Character.Humanoid.Health = 0
-                continue
+                game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({
+                    ["Name"] = "Micro Converter"
+                })
             end
             fieldposition = temptable.sprouts.coords.Position
             fieldpos = temptable.sprouts.coords
@@ -1138,17 +1227,8 @@ task.spawn(function() while true do
             end
             temptable.converting = false
             temptable.act = temptable.act + 1
-            task.wait(6)
-            if kocmoc.toggles.autoquest then makequests() end
-            if kocmoc.toggles.autoplanters then collectplanters() end
-            if kocmoc.toggles.autokillmobs then 
-                if temptable.act >= kocmoc.vars.monstertimer then
-                    temptable.started.monsters = true
-                    temptable.act = 0
-                    killmobs() 
-                    temptable.started.monsters = false
-                end
-            end
+            task.wait(3)
+            doBPChecks()
             if kocmoc.toggles.autoant and not game:GetService("Workspace").Toys["Ant Challenge"].Busy.Value and rtsg().Eggs.AntPass > 0 then 
                 if kocmoc.toggles.autodoquest and game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Menus.Children.Quests.Content:FindFirstChild("Frame") then
                     for i,v in next, game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Menus.Children.Quests:GetDescendants() do
@@ -1163,7 +1243,7 @@ task.spawn(function() while true do
                 end
             end
         end
-        
+
     end
 end end end)
 
