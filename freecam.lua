@@ -314,7 +314,7 @@ local function StepFreecam(dt)
 	local cameraCFrame = CFrame.new(cameraPos)*CFrame.fromOrientation(cameraRot.x, cameraRot.y, 0)*CFrame.new(vel*NAV_GAIN*dt)
 	cameraPos = cameraCFrame.p
 
-	Camera.CFrame = cameraCFrame
+	sethiddenproperty(Camera, "CFrame", cameraCFrame)
 	Camera.Focus = cameraCFrame*CFrame.new(0, 0, -GetFocusDistance(cameraCFrame))
 	Camera.FieldOfView = cameraFov
 end
@@ -396,7 +396,7 @@ local PlayerState = {} do
 		Camera.CameraType = cameraType
 		cameraType = nil
 
-		Camera.CFrame = cameraCFrame
+		sethiddenproperty(Camera, "CFrame", cameraCFrame)
 		cameraCFrame = nil
 
 		Camera.Focus = cameraFocus
